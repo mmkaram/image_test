@@ -2,8 +2,9 @@ use std::time::Instant;
 use image::open;
 
 mod knn;
+mod video;
 
-fn main() {
+fn two_images() {
     // Load IMG1 and IMG2 into buffer
     let img1 = open("IMG1.png").unwrap();
     let img2 = open("IMG2.png").unwrap();
@@ -20,4 +21,8 @@ fn main() {
 
     // Save the result to a file
     img3.save("IMG4.png").unwrap();
+}
+
+fn main() {
+    let frames = video::extract_frames("video.mp4", 100).unwrap();
 }
