@@ -1,0 +1,7 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/rust
+{
+	"name": "Image_Test",
+	"image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+	"postCreateCommand": "sudo apt -y update && sudo apt install -y ffmpeg libclang-dev libavutil-dev libavcodec-dev libavformat-dev libavfilter-dev libavdevice-dev libopencv-dev clang libclang-dev"
+}
