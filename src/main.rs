@@ -55,7 +55,7 @@ fn opencv() {
     println!("Function call took: {:?}", duration);
 }
 fn main() {
-    two_images();
-    multiple_images();
+    // two_images();
+    // multiple_images();
     opencv();
 }
