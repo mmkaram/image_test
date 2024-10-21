@@ -1,8 +1,9 @@
 use opencv::{
-    highgui, prelude::*, video, videoio, Error
+    highgui, prelude::*, video, videoio, Error, core::Size, imgproc::COLOR_GRAY2BGR, imgproc::cvt_color,
 };
 
 const VIDEO_DEBUG: bool = false;
+const VIDEO_OUTPUT_DEBUG: bool = false;
 
 pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> {
     // Open the video file
@@ -16,6 +17,27 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
     if VIDEO_DEBUG {
         // Open a GUI window
         highgui::named_window("Foreground Mask", highgui::WINDOW_NORMAL)?;
+    }
+
+    let mut buffer: Option<videoio::VideoWriter> = None;
+
+    if VIDEO_OUTPUT_DEBUG {
+        let width = cap.get(videoio::CAP_PROP_FRAME_WIDTH)? as i32;
+        let height = cap.get(videoio::CAP_PROP_FRAME_HEIGHT)? as i32;
+
+        // Create a Size instance
+        let frame_size = Size::new(width, height);
+
+        // Open a video buffer to add frames to
+        buffer = Some(
+            videoio::VideoWriter::new(
+                "target/output.mp4",
+                videoio::VideoWriter::fourcc('m', 'p', '4', 'v')?,
+                cap.get(videoio::CAP_PROP_FPS)?,
+                frame_size,
+                true,
+            )?
+        );
     }
 
     // Process the video frame by frame
@@ -38,11 +60,25 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
                 break;
             }
         }
+        if VIDEO_OUTPUT_DEBUG {
+            let mut color_frame = Mat::default();
+    
+            // Convert fg_mask to a 3-channel BGR image for output
+            cvt_color(&fg_mask, &mut color_frame, COLOR_GRAY2BGR, 0)?;
+            
+            // Write the converted frame to the video buffer
+            buffer.as_mut().unwrap().write(&color_frame)?;
+        }
     }
 
     if VIDEO_DEBUG {
     // Release resources
         highgui::destroy_all_windows()?;
+    }
+
+    if VIDEO_OUTPUT_DEBUG {
+        // Release resources
+        buffer.unwrap().release()?;
     }
     Ok(())
 }
