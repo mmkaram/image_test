@@ -3,5 +3,6 @@
 {
 	"name": "Image_Test",
 	"image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+	// ffmpeg is unnecessary for this project, but it's here for reference
 	"postCreateCommand": "sudo apt -y update && sudo apt install -y ffmpeg libclang-dev libavutil-dev libavcodec-dev libavformat-dev libavfilter-dev libavdevice-dev libopencv-dev clang libclang-dev"
 }
