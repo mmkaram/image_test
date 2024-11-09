@@ -12,3 +12,4 @@ fn opencv() {
 fn main() {
     opencv();
 }
+
