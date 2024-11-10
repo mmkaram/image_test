@@ -1,6 +1,7 @@
 pub fn find_likely_balls(frame: &opencv::prelude::Mat) {
 
     let mut contours = opencv::types::VectorOfPoint::new();
+    let mut contours_two = core::Vector<core::Point>;
 
     let _ = opencv::imgproc::find_contours(
         frame,
