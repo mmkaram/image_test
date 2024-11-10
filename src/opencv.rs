@@ -1,5 +1,5 @@
 use opencv::{
-    highgui, prelude::*, video, videoio, Error, core::Size, imgproc::COLOR_GRAY2BGR, imgproc::cvt_color,
+    core::Size, highgui, imgproc::{cvt_color, COLOR_GRAY2BGR}, prelude::*, video, videoio::{VideoCapture, self}, Error
 };
 
 const VIDEO_DEBUG: bool = false;
@@ -7,7 +7,7 @@ const VIDEO_OUTPUT_DEBUG: bool = false;
 
 pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> {
     // Open the video file
-    let mut cap = videoio::VideoCapture::from_file(video_path, videoio::CAP_ANY)?;
+    let mut cap = VideoCapture::from_file(video_path, videoio::CAP_ANY)?;
     let mut frame = Mat::default();
     let mut fg_mask = Mat::default();
 
