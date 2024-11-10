@@ -2,6 +2,7 @@ use opencv::knn_background_subtraction_opencv;
 use std::time::Instant;
 
 mod opencv;
+mod util;
 fn opencv() {
     let start = Instant::now();
     let video_path = "TestVideo.mp4";
