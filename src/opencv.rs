@@ -1,6 +1,7 @@
 use opencv::{
     core::Size, highgui, imgproc::{cvt_color, COLOR_GRAY2BGR}, prelude::*, video, videoio::{VideoCapture, self}, Error
 };
+use super::util::find_likely_balls;
 
 const VIDEO_DEBUG: bool = false;
 const VIDEO_OUTPUT_DEBUG: bool = false;
@@ -49,6 +50,9 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
 
         // Apply the KNN background subtractor
         bg_subtractor.apply(&frame, &mut fg_mask, -1.0)?;
+
+        // this is where we should be looking for the ball
+        find_likely_balls(&frame);
 
         if VIDEO_DEBUG {
             // Show the foreground mask
