@@ -14,13 +14,10 @@ fn opencv() {
 }
 
 fn draw_contours() {
-    let frame = imgcodecs::imread("IMG3.png", imgcodecs::IMREAD_COLOR).unwrap();
-        match find_likely_balls(&frame) {
-            Ok(contour_image) => {
-                let _ = imgcodecs::imwrite("contours.png", &contour_image, &core::Vector::new());
-            },
-            Err(e) => println!("Error: {:?}", e),
-        };
+    let frame = imgcodecs::imread("IMG1.png", imgcodecs::IMREAD_COLOR).unwrap();
+    let a = find_likely_balls(&frame);
+    println!("About to save image");
+    let _ = imgcodecs::imwrite("contours.png", &a, &core::Vector::new());
 }
 
 fn main() {

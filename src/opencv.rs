@@ -52,7 +52,7 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
         bg_subtractor.apply(&frame, &mut fg_mask, -1.0)?;
 
         // this is where we should be looking for the ball
-        find_likely_balls(&frame);
+        //find_likely_balls(&frame);
 
         if VIDEO_DEBUG {
             // Show the foreground mask

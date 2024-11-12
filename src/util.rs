@@ -1,73 +1,54 @@
 use opencv::{
-    core::{Mat, Point, Scalar, Vector},
+    core::{Mat, Point, Vector, CV_8U},
     imgproc,
-    prelude::*,
 };
 
-pub fn find_likely_balls(frame: &Mat) -> Result<Mat, opencv::Error> {
-    // Create a working copy of the frame
-    let mut working_mat = frame.clone();
+fn convert_to_grayscale(input_image: &Mat) -> Result<Mat, opencv::Error> {
+    let mut gray_image = Mat::default();
+    imgproc::cvt_color(input_image, &mut gray_image, imgproc::COLOR_BGRA2GRAY, 0)?;
+    Ok(gray_image)
+}
 
-    // For testing: Create a simple image with a circle
-    // In real usage, you'd remove this and use the actual frame
-    let _ = working_mat.set_to(&Scalar::all(0.0), &Mat::default());
-    imgproc::circle(
-        &mut working_mat,
-        Point::new(100, 100),
-        30,
-        Scalar::new(255.0, 255.0, 255.0, 0.0),
-        -1,
-        imgproc::LINE_8,
-        0,
-    )?;
-
-    // Convert to grayscale if not already
-    let mut gray_mat = Mat::default();
-    if frame.channels() > 1 {
-        imgproc::cvt_color(&working_mat, &mut gray_mat, imgproc::COLOR_BGR2GRAY, 0)?;
-    } else {
-        gray_mat = working_mat.clone();
-    }
-
-    // Apply threshold to create binary image
-    let mut binary = Mat::default();
-    imgproc::threshold(
-        &gray_mat,
-        &mut binary,
-        127.0,
-        255.0,
-        imgproc::THRESH_BINARY,
-    )?;
-
-    // Find contours
-    let mut contours: Vector<Vector<Point>> = Vector::new();
-    let hierarchy = Mat::default();
+use opencv::prelude::MatTraitConst;
+fn convert_to_8bit(input_image: &Mat) -> Result<Mat, opencv::Error> {
+    let mut dst = Mat::default();
     
+    // Get the depth
+    let depth = MatTraitConst::depth(input_image);
+    
+    if depth != CV_8U {
+        // Convert to 8-bit
+        input_image.convert_to(&mut dst, CV_8U, 1.0, 0.0)?;
+    } else {
+        // If it's already 8-bit, just clone the source
+        dst = input_image.clone();
+    }
+    
+    Ok(dst)
+}
+
+fn make_binary(unclean_image: &Mat) -> Result<Mat, opencv::Error> {
+    let grayscale = convert_to_grayscale(&unclean_image);
+    let eight_bit = convert_to_8bit(&grayscale?);
+    return eight_bit;
+}
+
+
+pub fn find_likely_balls(image: &Mat) ->  Vector<Vector<Point>> {
+    let mut contours: Vector<Vector<Point>> = Vector::new();
+    let binary_image = make_binary(&image);
     imgproc::find_contours(
-        &binary,
+        &binary_image.unwrap(),
         &mut contours,
         imgproc::RETR_EXTERNAL,
         imgproc::CHAIN_APPROX_SIMPLE,
         Point::new(0, 0),
-    )?;
+    )
+    .unwrap();
 
-    // Create output image for visualization
-    let mut output = frame.clone();
-    
-    // Draw all contours
-    for (i, contour) in contours.iter().enumerate() {
-        imgproc::draw_contours(
-            &mut output,
-            &contours,
-            i as i32,
-            Scalar::new(0.0, 255.0, 0.0, 0.0), // Green color
-            2,                                  // Thickness
-            imgproc::LINE_8,
-            &hierarchy,
-            0,
-            Point::new(0, 0),
-        )?;
-    }
+    // TODO: overlay contours on image
 
-    Ok(output)
+    return contours;
+
+
 }
