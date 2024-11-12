@@ -6,6 +6,7 @@ use util::find_likely_balls;
 mod opencv;
 mod util;
 fn opencv() {
+    // This calls and records how long the knn_background subtraction takes
     let start = Instant::now();
     let video_path = "TestVideo.mp4";
     knn_background_subtraction_opencv(video_path).unwrap();
