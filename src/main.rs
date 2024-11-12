@@ -27,9 +27,3 @@ fn main() {
     draw_contours();
     opencv();
 }
-
-
-
-// rebase comment, happened second
-
-// Main comment, happened first

@@ -3,3 +3,4 @@
 .direnv
 *.perf
 *.data
+neovim.sh

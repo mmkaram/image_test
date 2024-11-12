@@ -7,11 +7,10 @@ use opencv::{
 pub fn find_likely_balls(frame: &Mat) -> Result<Mat, opencv::Error> {
     // Create a working copy of the frame
     let mut working_mat = frame.clone();
-    let mut contours_mat = Mat::default();
 
     // For testing: Create a simple image with a circle
     // In real usage, you'd remove this and use the actual frame
-    working_mat.set_to(&Scalar::all(0.0), &Mat::default());
+    let _ = working_mat.set_to(&Scalar::all(0.0), &Mat::default());
     imgproc::circle(
         &mut working_mat,
         Point::new(100, 100),
