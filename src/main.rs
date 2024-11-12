@@ -17,8 +17,6 @@ fn draw_contours() {
     let frame = imgcodecs::imread("IMG3.png", imgcodecs::IMREAD_COLOR).unwrap();
         match find_likely_balls(&frame) {
             Ok(contour_image) => {
-                // Do something with the contour image
-                //let params: Vec<i32>;
                 let _ = imgcodecs::imwrite("contours.png", &contour_image, &core::Vector::new());
             },
             Err(e) => println!("Error: {:?}", e),
