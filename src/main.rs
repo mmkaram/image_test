@@ -1,5 +1,5 @@
 use opencv::knn_background_subtraction_opencv;
-use ::opencv::imgcodecs;
+use ::opencv::{imgcodecs, core};
 use std::time::Instant;
 use util::find_likely_balls;
 
@@ -14,11 +14,12 @@ fn opencv() {
 }
 
 fn draw_contours() {
-    let frame = imgcodecs::imread("IMG1.png", imgcodecs::IMREAD_COLOR).unwrap();
+    let frame = imgcodecs::imread("IMG3.png", imgcodecs::IMREAD_COLOR).unwrap();
         match find_likely_balls(&frame) {
             Ok(contour_image) => {
                 // Do something with the contour image
-                println!("Contours drawn and saved to contours.png");
+                //let params: Vec<i32>;
+                let _ = imgcodecs::imwrite("contours.png", &contour_image, &core::Vector::new());
             },
             Err(e) => println!("Error: {:?}", e),
         };
