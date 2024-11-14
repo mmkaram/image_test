@@ -21,6 +21,6 @@ fn draw_contours() {
 }
 
 fn main() {
-    draw_contours();
+    //draw_contours();
     opencv();
 }
