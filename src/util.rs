@@ -4,6 +4,7 @@ use opencv::{
 };
 
 fn convert_to_grayscale(input_image: &Mat) -> Result<Mat, opencv::Error> {
+    let user = "";
     let mut gray_image = Mat::default();
     imgproc::cvt_color(input_image, &mut gray_image, imgproc::COLOR_BGRA2GRAY, 0)?;
     Ok(gray_image)

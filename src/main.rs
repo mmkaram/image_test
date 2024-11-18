@@ -18,9 +18,10 @@ fn draw_contours() {
     let a = find_likely_balls(&frame);
     println!("About to save image");
     let _ = imgcodecs::imwrite("contours.png", &a, &core::Vector::new());
+    println!("Saved image");
 }
 
 fn main() {
-    //draw_contours();
+    draw_contours();
     opencv();
 }
