@@ -1,7 +1,12 @@
 use opencv::{
-    core::Size, highgui, imgproc::{cvt_color, COLOR_GRAY2BGR}, prelude::*, video, videoio::{VideoCapture, self}, Error
+    core::Size,
+    highgui,
+    imgproc::{cvt_color, COLOR_GRAY2BGR},
+    prelude::*,
+    video,
+    videoio::{self, VideoCapture},
+    Error,
 };
-use super::util::find_likely_balls;
 
 const VIDEO_DEBUG: bool = false;
 const VIDEO_OUTPUT_DEBUG: bool = false;
@@ -30,15 +35,13 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
         let frame_size = Size::new(width, height);
 
         // Open a video buffer to add frames to
-        buffer = Some(
-            videoio::VideoWriter::new(
-                "target/output.mp4",
-                videoio::VideoWriter::fourcc('m', 'p', '4', 'v')?,
-                cap.get(videoio::CAP_PROP_FPS)?,
-                frame_size,
-                true,
-            )?
-        );
+        buffer = Some(videoio::VideoWriter::new(
+            "target/output.mp4",
+            videoio::VideoWriter::fourcc('m', 'p', '4', 'v')?,
+            cap.get(videoio::CAP_PROP_FPS)?,
+            frame_size,
+            true,
+        )?);
     }
 
     // Process the video frame by frame
@@ -57,26 +60,27 @@ pub fn knn_background_subtraction_opencv(video_path: &str) -> Result<(), Error> 
         if VIDEO_DEBUG {
             // Show the foreground mask
             highgui::imshow("Foreground Mask", &fg_mask)?;
-        
+
             // Exit on key press
             let key = highgui::wait_key(30)?;
-            if key == 113 { // quit with 'q'
+            if key == 113 {
+                // quit with 'q'
                 break;
             }
         }
         if VIDEO_OUTPUT_DEBUG {
             let mut color_frame = Mat::default();
-    
+
             // Convert fg_mask to a 3-channel BGR image for output
             cvt_color(&fg_mask, &mut color_frame, COLOR_GRAY2BGR, 0)?;
-            
+
             // Write the converted frame to the video buffer
             buffer.as_mut().unwrap().write(&color_frame)?;
         }
     }
 
     if VIDEO_DEBUG {
-    // Release resources
+        // Release resources
         highgui::destroy_all_windows()?;
     }
 

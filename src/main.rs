@@ -1,5 +1,5 @@
+use ::opencv::{core, imgcodecs};
 use opencv::knn_background_subtraction_opencv;
-use ::opencv::{imgcodecs, core};
 use std::time::Instant;
 use util::find_likely_balls;
 
